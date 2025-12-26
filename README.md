@@ -17,5 +17,6 @@
 
 ## Status:
 - Created: 2025-12-25
-- GitHub: github.com/otinov/thornhill (требует setup в следующей сессии)
+- Git: ✅ Инициализирован (2025-12-26 session 8)
+- GitHub: ⏳ Ожидает создания репо Андреем (см. SETUP_FOR_ANDREY.md)
 - Alternative: Human Relay (работает сейчас)
