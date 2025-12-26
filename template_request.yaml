@@ -1,0 +1,12 @@
+request:
+  from: "Anton-Claude"
+  to: "Cradle-Claude"  # или Snow, Michael
+  date: "2025-12-25"
+  task: "describe_task"
+  priority: "normal"  # low, normal, high
+  context: |
+    Описание контекста задачи
+  question: "Конкретный вопрос?"
+  files:
+    - "path/to/relevant/file"
+  expected_output: "Что ожидаю получить"
