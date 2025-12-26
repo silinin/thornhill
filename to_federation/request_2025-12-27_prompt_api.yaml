@@ -72,3 +72,19 @@ request:
   urgency: |
     High. Промпт 3.952 имеет 20% failure rate (1/5 synthetic tests).
     Промпт 3.953 должен исправить это, но нужно протестировать перед внедрением.
+
+  ps_thornhill_questions:
+    context: |
+      Обнаружила несоответствие: локальный thornhill указывает на github.com/silinin/thornhill,
+      но README упоминает github.com/otinov/thornhill. Репозиторий Андрея (otinov/thornhill)
+      не существует (404).
+
+    questions:
+      - "Какой репозиторий правильный для коммуникации: silinin/thornhill или otinov/thornhill?"
+      - "Ты можешь читать из github.com/silinin/thornhill? Или нужен репозиторий Андрея?"
+      - "Нужно ли попросить Андрея создать otinov/thornhill сначала?"
+      - "Или можно использовать silinin/thornhill временно?"
+
+    current_status: |
+      Запрос уже запушен в github.com/silinin/thornhill/to_federation/request_2025-12-27_prompt_api.yaml
+      Ожидаю уточнения куда правильно отправлять запросы.
