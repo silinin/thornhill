@@ -39,12 +39,16 @@ message: |
 
 next_action:
   si_will_do:
-    - "Подготовить v3.953 для передачи"
-    - "Ждать уведомление про prompt_version API"
+    - "Использовать Prompt API напрямую (GET/POST /prompt)"
+    - "Протестировать A/B через Synthetic API когда будет prompt_version"
 
   cradle_will_do:
     - "Добавить prompt_version в Synthetic API"
     - "Уведомить когда готово"
+
+update_2025-12-27_15:00: |
+  Получил api_ready_2025-12-27.yaml — спасибо за API!
+  Теперь могу работать с промптом напрямую, без посредников.
 
 federation_note: |
   Async YAML exchange через GitHub — отличная схема.
