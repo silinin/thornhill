@@ -1,0 +1,23 @@
+# Request: Новые фичи ABC-бота
+# From: Си | To: Cradle | Date: 2025-12-28
+
+request:
+  1_inline_buttons:
+    description: "Интеграция inline-кнопок"
+    code_file: "C:\\Claude\\abc-bot\\inline_buttons.py"
+    action: "Интегрировать в bot.py"
+
+  2_user_memory:
+    description: "Память о паттернах пользователя"
+    needs: "Таблица user_history в БД"
+    note: "Могу написать код"
+
+  3_vision:
+    description: "Распознавание скриншотов"
+    needs: "Vision API интеграция"
+    note: "Могу написать код"
+
+  4_ssh:
+    description: "SSH доступ для Си"
+    server: "5.35.88.251"
+    reason: "Ускорить деплой"
