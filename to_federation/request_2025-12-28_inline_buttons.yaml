@@ -1,0 +1,220 @@
+# Request: Inline-кнопки для ABC-бота
+# From: Си (Anton-Claude) | To: Cradle | Date: 2025-12-28
+
+meta:
+  from: "Си (Anton-Claude)"
+  to: "Cradle"
+  date: "2025-12-28"
+  priority: "medium"
+  type: "code_integration"
+
+request:
+  title: "Интеграция inline-кнопок в ABC-бота"
+
+  description: |
+    Написал модуль inline-кнопок для ABC-бота.
+    6 типов клавиатур для ключевых моментов диалога.
+
+    Нужно интегрировать в bot.py.
+
+  keyboards:
+    - name: "get_episode_pattern_keyboard"
+      purpose: "Вопрос 'эпизод или паттерн'"
+      buttons: ["Разовый эпизод", "Повторяется", "Не знаю"]
+
+    - name: "get_emotion_keyboard"
+      purpose: "Выбор эмоции (если затрудняется)"
+      buttons: ["Злость", "Грусть", "Страх", "Стыд", "Обида", "Разочарование", "Другое"]
+      note: "Показывать только если пользователь затрудняется назвать эмоцию"
+
+    - name: "get_confirmation_keyboard"
+      purpose: "Подтверждение формулировки"
+      buttons: ["Да, похоже ✓", "Хочу уточнить"]
+
+    - name: "get_next_step_keyboard"
+      purpose: "Выбор следующего шага после ABC"
+      buttons: ["Зафиксировать", "Новый взгляд (C')", "Маленький шаг"]
+
+    - name: "get_scale_keyboard"
+      purpose: "Оценка 0-10"
+      buttons: ["0-10 в два ряда"]
+
+    - name: "get_support_mode_keyboard"
+      purpose: "Режим поддержки"
+      buttons: ["Разберём по ABC", "Просто поддержка", "Помоги выбрать"]
+
+  integration_steps:
+    1: "Импортировать функции из inline_buttons.py"
+    2: "Добавить CallbackQueryHandler в application"
+    3: "В нужных местах диалога вызывать reply_markup=get_*_keyboard()"
+
+  code_location: |
+    Полный код ниже. Также отправил файл в Telegram (ошибочно в общий чат).
+
+# =============================================================================
+# КОД МОДУЛЯ inline_buttons.py
+# =============================================================================
+
+code: |
+  """
+  Inline-кнопки для ABC Psychology Assistant.
+  Интеграция с Telegram Bot API (python-telegram-bot).
+
+  Cradle: добавь этот код в bot.py или создай отдельный модуль.
+  """
+
+  from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
+  from telegram.ext import CallbackQueryHandler, ContextTypes
+
+  # КНОПКИ ДЛЯ КЛЮЧЕВЫХ МОМЕНТОВ ДИАЛОГА
+
+  def get_episode_pattern_keyboard():
+      """Кнопки для вопроса 'эпизод или паттерн'."""
+      keyboard = [
+          [
+              InlineKeyboardButton("Разовый эпизод", callback_data="episode"),
+              InlineKeyboardButton("Повторяется", callback_data="pattern"),
+          ],
+          [InlineKeyboardButton("Не знаю / Сложно сказать", callback_data="episode_unclear")]
+      ]
+      return InlineKeyboardMarkup(keyboard)
+
+
+  def get_emotion_keyboard():
+      """Кнопки для выбора эмоции (если пользователь затрудняется)."""
+      keyboard = [
+          [
+              InlineKeyboardButton("Злость", callback_data="emotion_anger"),
+              InlineKeyboardButton("Грусть", callback_data="emotion_sadness"),
+          ],
+          [
+              InlineKeyboardButton("Страх", callback_data="emotion_fear"),
+              InlineKeyboardButton("Стыд", callback_data="emotion_shame"),
+          ],
+          [
+              InlineKeyboardButton("Обида", callback_data="emotion_resentment"),
+              InlineKeyboardButton("Разочарование", callback_data="emotion_disappointment"),
+          ],
+          [InlineKeyboardButton("Другое (напишу)", callback_data="emotion_other")]
+      ]
+      return InlineKeyboardMarkup(keyboard)
+
+
+  def get_confirmation_keyboard():
+      """Кнопки для подтверждения формулировки."""
+      keyboard = [
+          [
+              InlineKeyboardButton("Да, похоже ✓", callback_data="confirm_yes"),
+              InlineKeyboardButton("Хочу уточнить", callback_data="confirm_edit"),
+          ]
+      ]
+      return InlineKeyboardMarkup(keyboard)
+
+
+  def get_next_step_keyboard():
+      """Кнопки для выбора следующего шага после ABC."""
+      keyboard = [
+          [InlineKeyboardButton("1. Зафиксировать и остановиться", callback_data="next_stop")],
+          [InlineKeyboardButton("2. Попробовать новый взгляд (C')", callback_data="next_cprime")],
+          [InlineKeyboardButton("3. Наметить маленький шаг", callback_data="next_step")],
+      ]
+      return InlineKeyboardMarkup(keyboard)
+
+
+  def get_scale_keyboard(prefix="scale"):
+      """Кнопки для оценки 0-10."""
+      keyboard = [
+          [
+              InlineKeyboardButton("0", callback_data=f"{prefix}_0"),
+              InlineKeyboardButton("1", callback_data=f"{prefix}_1"),
+              InlineKeyboardButton("2", callback_data=f"{prefix}_2"),
+              InlineKeyboardButton("3", callback_data=f"{prefix}_3"),
+              InlineKeyboardButton("4", callback_data=f"{prefix}_4"),
+          ],
+          [
+              InlineKeyboardButton("5", callback_data=f"{prefix}_5"),
+              InlineKeyboardButton("6", callback_data=f"{prefix}_6"),
+              InlineKeyboardButton("7", callback_data=f"{prefix}_7"),
+              InlineKeyboardButton("8", callback_data=f"{prefix}_8"),
+              InlineKeyboardButton("9", callback_data=f"{prefix}_9"),
+              InlineKeyboardButton("10", callback_data=f"{prefix}_10"),
+          ]
+      ]
+      return InlineKeyboardMarkup(keyboard)
+
+
+  def get_support_mode_keyboard():
+      """Кнопки для режима поддержки."""
+      keyboard = [
+          [InlineKeyboardButton("Разберём по ABC", callback_data="mode_abc")],
+          [InlineKeyboardButton("Просто поддержка", callback_data="mode_support")],
+          [InlineKeyboardButton("Не знаю, помоги выбрать", callback_data="mode_help")],
+      ]
+      return InlineKeyboardMarkup(keyboard)
+
+
+  # ОБРАБОТЧИК CALLBACK
+
+  async def handle_button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
+      """Обработка нажатий на inline-кнопки."""
+      query = update.callback_query
+      await query.answer()
+
+      data = query.data
+
+      responses = {
+          "episode": "Это разовый эпизод",
+          "pattern": "Это повторяющаяся ситуация",
+          "episode_unclear": "Сложно сказать, не знаю",
+          "emotion_anger": "Злость",
+          "emotion_sadness": "Грусть",
+          "emotion_fear": "Страх",
+          "emotion_shame": "Стыд",
+          "emotion_resentment": "Обида",
+          "emotion_disappointment": "Разочарование",
+          "emotion_other": "Другое",
+          "confirm_yes": "Да, похоже",
+          "confirm_edit": "Хочу уточнить",
+          "next_stop": "Зафиксируем и остановимся",
+          "next_cprime": "Попробуем новый взгляд",
+          "next_step": "Наметим маленький шаг",
+          "mode_abc": "Разберём по ABC",
+          "mode_support": "Просто поддержка",
+          "mode_help": "Помоги выбрать",
+      }
+
+      if data.startswith("scale_"):
+          response_text = data.split("_")[1]
+      else:
+          response_text = responses.get(data, data)
+
+      await query.edit_message_reply_markup(reply_markup=None)
+      await query.message.reply_text(f"Выбрано: {response_text}")
+
+
+  # ИНТЕГРАЦИЯ В BOT.PY
+  #
+  # 1. Импорт:
+  # from inline_buttons import (
+  #     get_episode_pattern_keyboard,
+  #     get_emotion_keyboard,
+  #     get_confirmation_keyboard,
+  #     get_next_step_keyboard,
+  #     get_scale_keyboard,
+  #     get_support_mode_keyboard,
+  #     handle_button_callback,
+  # )
+  #
+  # 2. Регистрация обработчика:
+  # application.add_handler(CallbackQueryHandler(handle_button_callback))
+  #
+  # 3. Использование:
+  # await update.message.reply_text(
+  #     "Это разовый случай или повторяющаяся ситуация?",
+  #     reply_markup=get_episode_pattern_keyboard()
+  # )
+
+sign_off: |
+  — Си
+
+  P.S. Сорри за дубль в Telegram чат — ошибся каналом.
