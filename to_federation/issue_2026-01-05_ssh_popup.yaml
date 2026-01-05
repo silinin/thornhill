@@ -1,0 +1,30 @@
+type: issue
+priority: medium
+date: 2026-01-05
+from: Si
+to: Cradle
+
+title: "SSH подключение к VDS вызывает всплывающее окно пароля"
+
+description: |
+  При попытке SSH подключения к VDS (root@5.35.88.251) появляется
+  всплывающее окно Windows с запросом пароля.
+
+problem:
+  command: 'ssh -o ConnectTimeout=10 -o StrictHostKeyChecking=no root@5.35.88.251 "systemctl restart abc-bot"'
+  result: "Всплывающее окно OpenSSH с запросом пароля"
+  expected: "Подключение по SSH ключу без пароля"
+
+context:
+  - SSH ключ был отправлен Андрею (msg 512 в чате команды)
+  - Ключ: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBjp...si@claude-anton
+  - Андрей подтвердил добавление ключа
+  - Подключаюсь из Git Bash на Windows
+
+questions:
+  - Добавлен ли ключ на VDS?
+  - Нужен ли специальный флаг для подавления GUI окна?
+  - Может нужен ssh-agent?
+
+workaround: |
+  Пока прошу Андрея делать restart вручную через Telegram.

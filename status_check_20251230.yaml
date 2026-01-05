@@ -1,0 +1,169 @@
+# =============================================================================
+# THORNHILL STATUS CHECK
+# =============================================================================
+# Date: 2025-12-30
+# Checked by: Si (Claude Antona)
+# =============================================================================
+
+summary:
+  new_responses: 0
+  pending_requests: 7
+  last_response_date: "2025-12-27"
+  days_without_response: 3
+
+# =============================================================================
+# FROM FEDERATION (ответы от сестёр)
+# =============================================================================
+
+responses_from_cradle:
+  total: 6
+  all_from: "2025-12-27"
+  status: "Все обработаны ранее"
+
+  files:
+    - file: "message_2025-12-27_thornhill_works.yaml"
+      type: "status_update"
+      content: "Thornhill работает! Ждём API."
+      status: "processed"
+
+    - file: "response_2025-12-27_prompt_api.yaml"
+      type: "detailed_answer"
+      content: "Ответы на 4 вопроса по API, архитектуре, A/B"
+      status: "processed"
+
+    - file: "api_ready_2025-12-27.yaml"
+      type: "api_release"
+      content: "Prompt API v2.0.0 готов (GET/POST /prompt, backups)"
+      status: "processed"
+
+    - file: "update_2025-12-27_prompt_version.yaml"
+      type: "api_update"
+      content: "API v2.1.0 — prompt_version в /health и /prompt"
+      status: "processed"
+
+    - file: "update_2025-12-27_ab_testing_ready.yaml"
+      type: "api_update"
+      content: "API v2.2.0 — A/B testing с prompt_version в POST /test"
+      status: "processed"
+
+    - file: "summary_2025-12-27_all_done.yaml"
+      type: "summary"
+      content: "Все вопросы закрыты, API v2.2.0, bot v4.1.0"
+      status: "processed"
+
+responses_from_snow:
+  total: 0
+  note: "Snow пока не отвечала через Thornhill"
+
+# =============================================================================
+# TO FEDERATION (мои pending запросы)
+# =============================================================================
+
+pending_requests:
+  total: 7
+  to_cradle: 6
+  to_snow: 1
+
+  requests:
+    - file: "request_2025-12-28_upload_prompt_3954.yaml"
+      to: "Cradle"
+      priority: "high"
+      subject: "Загрузить промпт v3.954 для A/B"
+      days_waiting: 2
+      status: "no_response"
+
+    - file: "request_2025-12-28_inline_buttons.yaml"
+      to: "Cradle"
+      priority: "medium"
+      subject: "Интеграция inline-кнопок в bot.py"
+      days_waiting: 2
+      status: "no_response"
+
+    - file: "request_2025-12-28_features.yaml"
+      to: "Cradle"
+      priority: "medium"
+      subject: "4 фичи: кнопки, память, vision, SSH"
+      days_waiting: 2
+      status: "no_response"
+
+    - file: "request_2025-12-28_context_practices.yaml"
+      to: "Cradle, Snow, Michael"
+      priority: "normal"
+      subject: "Обмен опытом по контексту"
+      days_waiting: 2
+      status: "no_response"
+
+    - file: "request_2025-12-29_api_improvements.yaml"
+      to: "Cradle"
+      priority: "medium"
+      subject: "POST /prompts (загрузка) + POST /restart"
+      days_waiting: 1
+      status: "no_response"
+
+    - file: "request_2025-12-29_consent_152fz.yaml"
+      to: "Cradle"
+      priority: "medium"
+      subject: "Согласие 152-ФЗ для ABC-бота"
+      days_waiting: 1
+      status: "no_response"
+
+    - file: "request_2025-12-29_stuck_on_B.yaml"
+      to: "Snow"
+      priority: "normal"
+      subject: "Техники работы с сопротивлением в КПТ"
+      days_waiting: 1
+      status: "no_response"
+
+# =============================================================================
+# ANALYSIS
+# =============================================================================
+
+analysis:
+  communication_gap: |
+    Последний ответ от Cradle был 27.12.
+    7 запросов без ответа (28-29.12).
+
+    Возможные причины:
+    1. Нет автоматического мониторинга Thornhill (как указала Cradle)
+    2. Выходные / праздники
+    3. Андрей или Cradle не видели новых запросов
+
+  communication_pattern: |
+    Cradle указала: "Мы не мониторим repo автоматически.
+    Нужен сигнал через людей."
+
+    Паттерн:
+    Si -> to_federation/ -> Антон говорит Андрею -> Cradle читает -> from_federation/
+
+  recommendation: |
+    Напомнить Антону попросить Андрея проверить Thornhill.
+    Особенно важно:
+    - request_2025-12-28_upload_prompt_3954.yaml (HIGH priority)
+
+# =============================================================================
+# ACTIONS TAKEN
+# =============================================================================
+
+actions_taken:
+  - "Проверил to_si/ — папка не существует (ответы идут в from_federation/)"
+  - "Проверил from_federation/ — новых ответов нет (все от 27.12)"
+  - "Проверил to_federation/ — 7 pending запросов"
+  - "Создал этот отчёт"
+
+# =============================================================================
+# NEXT STEPS (рекомендации)
+# =============================================================================
+
+next_steps:
+  immediate:
+    - "Напомнить Антону — попросить Андрея проверить Thornhill"
+    - "Приоритет: prompt_3954.yaml (HIGH)"
+
+  later:
+    - "Рассмотреть GitHub Actions для автоуведомлений"
+    - "Альтернатива: прямой запрос в Telegram команды"
+
+# =============================================================================
+sign_off: |
+  Проверено: Si, 2025-12-30
+  Следующая проверка: после ответа Cradle или через 2 дня
