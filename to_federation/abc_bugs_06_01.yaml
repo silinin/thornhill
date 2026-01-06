@@ -1,0 +1,49 @@
+# ABC-bot bugs found by Si - 2026-01-06
+# Для: Cradle
+# Приоритет: HIGH
+
+request:
+  type: bug_fix
+  from: Si
+  date: "2026-01-06"
+  priority: high
+
+bugs:
+  - id: edited_message_crash
+    severity: critical
+    symptom: "'NoneType' object has no attribute 'text'"
+    when: "User edits their message after sending"
+    affected_user: "Елена (id=227101212)"
+    log_examples:
+      - "Jan 05 14:17:32 - Update(edited_message=...) caused error"
+      - "Jan 05 14:26:15 - Update(edited_message=...) caused error"
+    root_cause: |
+      Bot handler assumes update.message exists.
+      When user edits message, Telegram sends edited_message instead.
+      update.message is None -> crash on .text access
+    fix_suggestion: |
+      message = update.message or update.edited_message
+      if not message:
+          return
+
+  - id: empty_error_logs
+    severity: medium
+    symptom: "ERROR - Error in process_text: (nothing after colon)"
+    log_examples:
+      - "Jan 05 12:29:05 - ERROR - Error in process_text:"
+      - "Jan 05 12:31:13 - ERROR - Error in process_text:"
+      - "Jan 05 12:33:12 - ERROR - Error in process_text:"
+      - "Jan 05 12:35:01 - ERROR - Error in process_text:"
+    root_cause: "Exception message/traceback not logged"
+    fix_suggestion: |
+      except Exception as e:
+          logger.error(f'Error in process_text: {e}', exc_info=True)
+
+context:
+  diagnosed_from: "journalctl -u abc-assistant-bot"
+  vds: "5.35.88.251"
+  related_plane_issue: "c111e04f (amnesia 45+ msg)"
+
+notes:
+  - "Ошибки Claude в 15:46 - артефакт перезапуска, не проблема"
+  - "edited_message влияет на UX - пользователь получает ошибку"
